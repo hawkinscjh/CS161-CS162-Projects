@@ -578,15 +578,3 @@ class GessGame:
             game.move_piece(cp_row, cp_col, tp_row, tp_col)
 
             game.update_player_turn()
-
-
-
-game = GessGame()
-game.print_Board()
-print(game.get_player_turn())
-game.make_move('c3', 'b3')
-game.print_Board()
-print(game.get_player_turn())
-
-
-
