@@ -31,7 +31,7 @@ class GessGame:
 
         # Add a row to label each column with a letter
         self._board.append(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
-                            'S', 'T'])
+                            'S', 'T', '-'])
 
         # Add a column to label each row with a number
         self._board[0][20] = '20'
@@ -292,198 +292,69 @@ class GessGame:
         return row
 
 
-    def move_amount(self, center):
+    def check_move_amount(self, cp_row, cp_col, tp_row, tp_col):
         """
+        Calculates amount being moved.
+        Pieces must move; they cannot be "moved" to their current location.
         If center stone is present, piece can move until it encounters another piece or goes over 18x18 board bounds.
         If center stone is not present, piece can move up to 3 spaces, unless it encounters another piece or goes over
         18x18 board bounds.
         """
 
-        if self._game_turn == 'BLACK':
+        row_moves = abs(tp_row - cp_row)
 
-            if center == 'b':
+        col_moves = abs(tp_col - cp_col)
 
-                return 20
+        print("Row moves, Col moves:", row_moves, ",", col_moves)
 
-            else:
+        if cp_row == tp_row and cp_col == tp_col:
 
-                return 3
+            print("Invalid move: center must move.")
 
-        if self._game_turn == 'WHITE':
+            return False
 
-            if center == 'w':
+        if self._board[cp_row][cp_col] == '-':
 
-                return 20
+            if row_moves > 3 or col_moves > 3:
 
-            else:
+                print("Invalid move: center is empty, so max movement is 3 spaces.")
 
-                return 3
+                return False
 
-    def current_piece(self, cp_row, cp_col):
+        return True
+
+    def check_current_piece(self, cp_row, cp_col):
         """
         Make the 3x3 piece that is going to be moved. Check if 3x3 is legal.
         Start piece cannot include any enemy pieces in its 3x3 grid.
         """
 
         center = self._board[cp_row][cp_col]
-
-        print("Center:", center)
-
-        if self._game_turn == 'BLACK':
-
-            if center == 'w':
-
-                print("Invalid move: 3x3 piece cannot include opponent's stones.")
-
-                return False
-
-        if self._game_turn == 'WHITE':
-
-            if center == 'b':
-                print("Invalid move: 3x3 piece cannot include opponent's stones.")
-
-                return False
-
         north = self._board[cp_row - 1][cp_col]
-
-        print("North:", north)
-
-        if self._game_turn == 'BLACK':
-
-            if north == 'w':
-                print("Invalid move: 3x3 piece cannot include opponent's stones.")
-
-                return False
-
-        if self._game_turn == 'WHITE':
-
-            if north == 'b':
-                print("Invalid move: 3x3 piece cannot include opponent's stones.")
-
-                return False
-
         south = self._board[cp_row + 1][cp_col]
-
-        print("South:", south)
-
-        if self._game_turn == 'BLACK':
-
-            if south == 'w':
-                print("Invalid move: 3x3 piece cannot include opponent's stones.")
-
-                return False
-
-        if self._game_turn == 'WHITE':
-
-            if south == 'b':
-                print("Invalid move: 3x3 piece cannot include opponent's stones.")
-
-                return False
-
         east = self._board[cp_row][cp_col + 1]
-
-        print("East:", east)
-
-        if self._game_turn == 'BLACK':
-
-            if east == 'w':
-                print("Invalid move: 3x3 piece cannot include opponent's stones.")
-
-                return False
-
-        if self._game_turn == 'WHITE':
-
-            if east == 'b':
-                print("Invalid move: 3x3 piece cannot include opponent's stones.")
-
-                return False
-
         west = self._board[cp_row][cp_col - 1]
-
-        print("West:", west)
-
-        if self._game_turn == 'BLACK':
-
-            if west == 'w':
-                print("Invalid move: 3x3 piece cannot include opponent's stones.")
-
-                return False
-
-        if self._game_turn == 'WHITE':
-
-            if west == 'b':
-                print("Invalid move: 3x3 piece cannot include opponent's stones.")
-
-                return False
-
         north_east = self._board[cp_row - 1][cp_col + 1]
-
-        print("North_east:", north_east)
-
-        if self._game_turn == 'BLACK':
-
-            if north_east == 'w':
-                print("Invalid move: 3x3 piece cannot include opponent's stones.")
-
-                return False
-
-        if self._game_turn == 'WHITE':
-
-            if north_east == 'b':
-                print("Invalid move: 3x3 piece cannot include opponent's stones.")
-
-                return False
-
         north_west = self._board[cp_row - 1][cp_col - 1]
-
-        print("North_west:", north_west)
-
-        if self._game_turn == 'BLACK':
-
-            if north_west == 'w':
-                print("Invalid move: 3x3 piece cannot include opponent's stones.")
-
-                return False
-
-        if self._game_turn == 'WHITE':
-
-            if north_west == 'b':
-                print("Invalid move: 3x3 piece cannot include opponent's stones.")
-
-                return False
-
         south_east = self._board[cp_row + 1][cp_col + 1]
-
-        print("South_east:", south_east)
-
-        if self._game_turn == 'BLACK':
-
-            if south_east == 'w':
-                print("Invalid move: 3x3 piece cannot include opponent's stones.")
-
-                return False
-
-        if self._game_turn == 'WHITE':
-
-            if south_east == 'b':
-                print("Invalid move: 3x3 piece cannot include opponent's stones.")
-
-                return False
-
         south_west = self._board[cp_row + 1][cp_col - 1]
 
-        print("South_west:", south_west)
+        print("North_west, North, North_east:", north_west, north, north_east)
+        print("     West, Center, East:      ", west, center, east)
+        print("South_west, South, South_east:", south_west, south, south_east)
 
         if self._game_turn == 'BLACK':
 
-            if south_west == 'w':
+            if center == 'w' or north == 'w' or south == 'w' or east == 'w' or west == 'w' or north_east == 'w' or north_west == 'w' or south_east == 'w' or south_west == 'w':
+
                 print("Invalid move: 3x3 piece cannot include opponent's stones.")
 
                 return False
 
         if self._game_turn == 'WHITE':
 
-            if south_west == 'b':
+            if center == 'b' or north == 'b' or south == 'b' or east == 'b' or west == 'b' or north_east == 'b' or north_west == 'b' or south_east == 'b' or south_west == 'b':
+
                 print("Invalid move: 3x3 piece cannot include opponent's stones.")
 
                 return False
@@ -500,51 +371,154 @@ class GessGame:
 
             return False
 
-        for x in range(0, 20):
+        for x in range(0, 21):
 
-            if center == self._board[0][x] or center == self._board[20][x]:
+            if (cp_row == 0 and cp_col == x) or (cp_row == 19 and cp_col == x) or (cp_row == 20 and cp_col == x) or (cp_row == x and cp_col == 0) or (cp_row == x and cp_col == 19) or (cp_row == x and cp_col == 20):
 
                 print("Invalid move: center cannot be out of bounds.")
 
                 return False
 
-    def target_piece(self, tp_row, tp_col):
+
+    def move_piece(self, tp_row, tp_col, cp_row, cp_col):
         """
-        Checks the 3x3 area where start_piece is being moved to.
-        Check if center square is being moved off of 18x18 grid, which is not allowed.
-        Player cannot make a move that leaves themselves without a ring.
+        Move the 3x3 piece on the board.
+        Remove any stones covered by piece's footprint.
+        Remove any stones left outside of 18x18 board
+        """
+        """
+        cp_center = self._board[cp_row][cp_col]
+        cp_north = self._board[cp_row - 1][cp_col]
+        cp_south = self._board[cp_row + 1][cp_col]
+        cp_east = self._board[cp_row][cp_col + 1]
+        cp_west = self._board[cp_row][cp_col - 1]
+        cp_north_east = self._board[cp_row - 1][cp_col + 1]
+        cp_north_west = self._board[cp_row - 1][cp_col - 1]
+        cp_south_east = self._board[cp_row + 1][cp_col + 1]
+        cp_south_west = self._board[cp_row + 1][cp_col - 1]
+
+        tp_center = self._board[tp_row][tp_col]
+        tp_north = self._board[tp_row - 1][tp_col]
+        tp_south = self._board[tp_row + 1][tp_col]
+        tp_east = self._board[tp_row][tp_col + 1]
+        tp_west = self._board[tp_row][tp_col - 1]
+        tp_north_east = self._board[tp_row - 1][tp_col + 1]
+        tp_north_west = self._board[tp_row - 1][tp_col - 1]
+        tp_south_east = self._board[tp_row + 1][tp_col + 1]
+        tp_south_west = self._board[tp_row + 1][tp_col - 1]
         """
 
-        print(tp_row, tp_col)
+        # Move piece to target location
+        self._board[tp_row][tp_col] = self._board[cp_row][cp_col]
+        self._board[tp_row - 1][tp_col] = self._board[cp_row - 1][cp_col]
+        self._board[tp_row + 1][tp_col] = self._board[cp_row + 1][cp_col]
+        self._board[tp_row][tp_col + 1] = self._board[cp_row][cp_col + 1]
+        self._board[tp_row][tp_col - 1] = self._board[cp_row][cp_col - 1]
+        self._board[tp_row - 1][tp_col + 1] = self._board[cp_row - 1][cp_col + 1]
+        self._board[tp_row - 1][tp_col - 1] = self._board[cp_row - 1][cp_col - 1]
+        self._board[tp_row + 1][tp_col + 1] = self._board[cp_row + 1][cp_col + 1]
+        self._board[tp_row + 1][tp_col - 1] = self._board[cp_row + 1][cp_col - 1]
 
-        center = self._board[tp_row][tp_col]
+        # Return parts left behind back to '-'
 
-        for x in range(0, 20):
 
-            if center == self._board[0][x] or center == self._board[20][x]:
+
+    def check_obstructions(self, cp_row, cp_col, tp_row, tp_col):
+        """
+        Check if attempted move stops when an obstruction is encountered.
+        Obstructions include any of the current player's stones, the opponent's stones, or the boundaries of the
+        18x18 board.
+        Obstructions can be overlapped by 3x3 piece, but must stop there, and cannot overlap more than one row or column
+        of the 3x3 piece.
+        """
+
+
+        pass
+
+    def check_move_direction(self, cp_row, cp_col, tp_row, tp_col):
+        """
+        Check if center moves out of bounds.
+        Check if the attempted direction of movement is allowed.
+        Pieces can only be moved in a direction if a stone is located in that location in the perimeter of the 3x3 piece.
+        """
+
+        center = self._board[cp_row][cp_col]
+        north = self._board[cp_row - 1][cp_col]
+        south = self._board[cp_row + 1][cp_col]
+        east = self._board[cp_row][cp_col + 1]
+        west = self._board[cp_row][cp_col - 1]
+        north_east = self._board[cp_row - 1][cp_col + 1]
+        north_west = self._board[cp_row - 1][cp_col - 1]
+        south_east = self._board[cp_row + 1][cp_col + 1]
+        south_west = self._board[cp_row + 1][cp_col - 1]
+
+        # Check if center moves out of bounds
+        for x in range(0, 21):
+
+            if (tp_row == 0 and tp_col == x) or (tp_row == 19 and tp_col == x) or (tp_row == 20 and tp_col == x) or (tp_row == x and tp_col == 0) or (tp_row == x and tp_col == 19) or (tp_row == x and tp_col == 20):
 
                 print("Invalid move: center cannot move out of bounds.")
 
                 return False
 
-        north = self._board[tp_row - 1][tp_col]
+        # Check movement north
+        if (tp_col == cp_col) and (tp_row < cp_row) and north == '-':
 
-        south = self._board[tp_row + 1][tp_col]
+            print("Invalid move: cannot move north without a stone located north in 3x3 piece.")
 
-        east = self._board[tp_row][tp_col + 1]
+            return False
 
-        west = self._board[tp_row][tp_col - 1]
+        # Check movement south
+        if (tp_col == cp_col) and (tp_row > cp_row) and south == '-':
 
-        north_east = self._board[tp_row - 1][tp_col + 1]
+            print("Invalid move: cannot move south without a stone located south in 3x3 piece.")
 
-        north_west = self._board[tp_row - 1][tp_col - 1]
+            return False
 
-        south_east = self._board[tp_row + 1][tp_col + 1]
+        # Check movement east
+        if (tp_col > cp_col) and (tp_row == cp_row) and east == '-':
 
-        south_west = self._board[tp_row + 1][tp_col - 1]
+            print("Invalid move: cannot move east without a stone located east in 3x3 piece.")
+
+            return False
+
+        # Check movement west
+        if (tp_col < cp_col) and (tp_row == cp_row) and west == '-':
+
+            print("Invalid move: cannot move west without a stone located west in 3x3 piece.")
+
+            return False
+
+        # Check movement northeast
+        if (tp_col > cp_col) and (tp_row < cp_row) and north_east == '-':
+
+            print("Invalid move: cannot move northeast without a stone located northeast in 3x3 piece.")
+
+            return False
+
+        # Check movement northwest
+        if (tp_col < cp_col) and (tp_row < cp_row) and north_west == '-':
+
+            print("Invalid move: cannot move northwest without a stone located northwest in 3x3 piece.")
+
+            return False
+
+        # Check movement southeast
+        if (tp_col > cp_col) and (tp_row > cp_row) and south_east == '-':
+
+            print("Invalid move: cannot move southeast without a stone located southeast in 3x3 piece.")
+
+            return False
+
+        # Check movement southwest
+        if (tp_col < cp_col) and (tp_row > cp_row) and south_west == '-':
+
+            print("Invalid move: cannot move southwest without a stone located southwest in 3x3 piece.")
+
+            return False
 
 
-    def ring_check(self):
+    def check_rings(self):
         """
         Function checks if current player has any rings on their board. If none are found, player loses.
         """
@@ -581,24 +555,27 @@ class GessGame:
             tp_col = int(GessGame.convert_column(self, target_position[0])) - 1
             tp_row = int(GessGame.convert_row(self, target_position[1:])) - 1
 
-            print("Current position's row:", cp_row)
-            print("Current position's column:", cp_col)
+            print("Current position's (row, column):", cp_row, ",", cp_col)
 
-            print("Target position's row:", tp_row)
-            print("Target position's column:", tp_col)
+            print("Target position's (row, column):", tp_row, ",", tp_col)
 
-            if cp_row == tp_row and cp_col == tp_col:
-                print("Invalid move: center must move.")
+            if game.check_current_piece(cp_row, cp_col) is False:
+                print("Try again.")
+                return
+
+            if game.check_move_amount(cp_row, cp_col, tp_row, tp_col) is False:
+                print("Try again.")
+                return
+
+            if game.check_move_direction(cp_row, cp_col, tp_row, tp_col) is False:
                 print("Try again")
                 return
 
-            if game.current_piece(cp_row, cp_col) is False:
-                print("Try again.")
+            if game.check_obstructions(cp_row, cp_col, tp_row, tp_col) is False:
+                print("Try again")
                 return
 
-            if game.target_piece(tp_row, tp_col) is False:
-                print("Try again.")
-                return
+            game.move_piece(cp_row, cp_col, tp_row, tp_col)
 
             game.update_player_turn()
 
@@ -607,9 +584,9 @@ class GessGame:
 game = GessGame()
 game.print_Board()
 print(game.get_player_turn())
-game.make_move('c2', 'c3')
+game.make_move('c3', 'b3')
 game.print_Board()
 print(game.get_player_turn())
-game.make_move('s18', 't18')
+
 
 
