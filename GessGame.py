@@ -577,4 +577,5 @@ class GessGame:
 
             game.move_piece(cp_row, cp_col, tp_row, tp_col)
 
+            # Switch current player
             game.update_player_turn()
