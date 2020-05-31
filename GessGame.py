@@ -555,9 +555,6 @@ class GessGame:
             tp_col = int(GessGame.convert_column(self, target_position[0])) - 1
             tp_row = int(GessGame.convert_row(self, target_position[1:])) - 1
 
-            print("Current position's (row, column):", cp_row, ",", cp_col)
-
-            print("Target position's (row, column):", tp_row, ",", tp_col)
 
             if game.check_current_piece(cp_row, cp_col) is False:
                 print("Try again.")
@@ -579,3 +576,14 @@ class GessGame:
 
             # Switch current player
             game.update_player_turn()
+
+
+game = GessGame()
+game.print_Board()
+print(game.get_player_turn())
+game.make_move('c3', 'b3')
+game.print_Board()
+print(game.get_player_turn())
+
+
+
