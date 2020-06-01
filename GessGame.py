@@ -299,13 +299,17 @@ class GessGame:
 
         col_moves = abs(tp_col - cp_col)
 
+        print("Row moves, Col moves:", row_moves, ",", col_moves)
+
         if cp_row == tp_row and cp_col == tp_col:
+            print("Invalid move: center must move.")
 
             return False
 
         if self._board[cp_row][cp_col] == '-':
 
             if row_moves > 3 or col_moves > 3:
+                print("Invalid move: center is empty, so max movement is only 3 spaces.")
 
                 return False
 
@@ -327,10 +331,15 @@ class GessGame:
         south_east = self._board[cp_row + 1][cp_col + 1]
         south_west = self._board[cp_row + 1][cp_col - 1]
 
+        print("North_west, North, North_east:", north_west, north, north_east)
+        print("     West, Center, East:      ", west, center, east)
+        print("South_west, South, South_east:", south_west, south, south_east)
+
         if self._game_turn == 'BLACK':
 
             if center == 'w' or north == 'w' or south == 'w' or east == 'w' or west == 'w' or north_east == 'w' or \
                     north_west == 'w' or south_east == 'w' or south_west == 'w':
+                print("Invalid move: 3x3 piece cannot include opponent's stones.")
 
                 return False
 
@@ -338,15 +347,18 @@ class GessGame:
 
             if center == 'b' or north == 'b' or south == 'b' or east == 'b' or west == 'b' or north_east == 'b' or \
                     north_west == 'b' or south_east == 'b' or south_west == 'b':
+                print("Invalid move: 3x3 piece cannot include opponent's stones.")
 
                 return False
 
         if center == north == south == east == west == north_east == north_west == south_east == south_west == '-':
+            print("Invalid move: 3x3 piece must contain at least one of your stones.")
 
             return False
 
         if center == ('b' or 'w') and north == south == east == west == north_east == north_west == south_east == \
                 south_west == '-':
+            print("Invalid move: 3x3 piece cannot only contain one stone located in the center.")
 
             return False
 
@@ -354,6 +366,7 @@ class GessGame:
 
             if (cp_row == 0 and cp_col == x) or (cp_row == 19 and cp_col == x) or (cp_row == 20 and cp_col == x) or \
                     (cp_row == x and cp_col == 0) or (cp_row == x and cp_col == 19) or (cp_row == x and cp_col == 20):
+                print("Invalid move: center cannot be out of bounds.")
 
                 return False
 
@@ -399,17 +412,23 @@ class GessGame:
 
         if self._game_turn == 'BLACK' and white_rings == 0:
 
+            print("Black wins!")
+
             self._game_state = 'BLACK_WON'
 
             return
 
         elif self._game_turn == 'WHITE' and black_rings == 0:
 
+            print("White wins!")
+
             self._game_state = 'WHITE_WON'
 
             return
 
         else:
+
+            print("The game continues!")
 
             return
 
@@ -435,46 +454,55 @@ class GessGame:
 
             if (tp_row == 0 and tp_col == x) or (tp_row == 19 and tp_col == x) or (tp_row == 20 and tp_col == x) or \
                     (tp_row == x and tp_col == 0) or (tp_row == x and tp_col == 19) or (tp_row == x and tp_col == 20):
+                print("Invalid move: center cannot move out of bounds.")
 
                 return False
 
         # Check movement north
         if (tp_col == cp_col) and (tp_row < cp_row) and north == '-':
+            print("Invalid move: cannot move north without a stone located north in 3x3 piece.")
 
             return False
 
         # Check movement south
         if (tp_col == cp_col) and (tp_row > cp_row) and south == '-':
+            print("Invalid move: cannot move south without a stone located south in 3x3 piece.")
 
             return False
 
         # Check movement east
         if (tp_col > cp_col) and (tp_row == cp_row) and east == '-':
+            print("Invalid move: cannot move east without a stone located east in 3x3 piece.")
 
             return False
 
         # Check movement west
         if (tp_col < cp_col) and (tp_row == cp_row) and west == '-':
+            print("Invalid move: cannot move west without a stone located west in 3x3 piece.")
 
             return False
 
         # Check movement northeast
         if (tp_col > cp_col) and (tp_row < cp_row) and north_east == '-':
+            print("Invalid move: cannot move northeast without a stone located northeast in 3x3 piece.")
 
             return False
 
         # Check movement northwest
         if (tp_col < cp_col) and (tp_row < cp_row) and north_west == '-':
+            print("Invalid move: cannot move northwest without a stone located northwest in 3x3 piece.")
 
             return False
 
         # Check movement southeast
         if (tp_col > cp_col) and (tp_row > cp_row) and south_east == '-':
+            print("Invalid move: cannot move southeast without a stone located southeast in 3x3 piece.")
 
             return False
 
         # Check movement southwest
         if (tp_col < cp_col) and (tp_row > cp_row) and south_west == '-':
+            print("Invalid move: cannot move southwest without a stone located southwest in 3x3 piece.")
 
             return False
 
@@ -498,6 +526,10 @@ class GessGame:
         white_rings = 0
 
         GessGame.move_piece(self, cp_row, cp_col, tp_row, tp_col, temp_board)
+
+        """print("Temp Board")
+        for x in range(len(temp_board)):
+            print(temp_board[x])"""
 
         if self._game_turn == 'BLACK':
 
@@ -527,9 +559,13 @@ class GessGame:
 
         if self._game_turn == 'BLACK' and black_rings == 0:
 
+            print("Invalid move: players cannot make a move that leaves themselves without a ring.")
+
             return False
 
         elif self._game_turn == 'WHITE' and white_rings == 0:
+
+            print("Invalid move: players cannot make a move that leaves themselves without a ring.")
 
             return False
 
