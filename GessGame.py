@@ -370,7 +370,7 @@ class GessGame:
 
                 return False
 
-        return True
+        return None
 
     def check_obstructions(self, cp_row, cp_col, tp_row, tp_col):
         """
@@ -653,6 +653,8 @@ class GessGame:
             if GessGame.check_current_piece(self, cp_row, cp_col) is False:
                 return False
 
+            print(GessGame.check_current_piece(self, cp_row, cp_col))
+
             if GessGame.check_move_amount(self, cp_row, cp_col, tp_row, tp_col) is False:
                 return False
 
@@ -672,3 +674,6 @@ class GessGame:
             # Next player's turn
             GessGame.next_player_turn(self)
 
+            return True
+
+        return True
