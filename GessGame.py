@@ -370,7 +370,7 @@ class GessGame:
 
                 return False
 
-        return None
+        return True
 
     def check_obstructions(self, cp_row, cp_col, tp_row, tp_col):
         """
@@ -380,6 +380,10 @@ class GessGame:
         Obstructions can be overlapped by 3x3 piece, but must stop there, and cannot overlap more than one row or column
         of the 3x3 piece.
         """
+
+        # Scan area between [cp_row][cp_col] and [tp_row][tp_col] for stones
+        # Don't need to worry about boundaries; already taken care of in other functions
+        # Ex) Moving East (right): as soon as [y + 1] column encounters another stone, must stop at first overlap.
 
         pass
 
