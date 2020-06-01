@@ -646,28 +646,19 @@ class GessGame:
             tp_col = int(GessGame.convert_column(self, target_position[0])) - 1
             tp_row = int(GessGame.convert_row(self, target_position[1:])) - 1
 
-            print("Current position's (row, column):", cp_row, ",", cp_col)
-
-            print("Target position's (row, column):", tp_row, ",", tp_col)
-
             if game.check_current_piece(cp_row, cp_col) is False:
-                print("Try again.")
                 return False
 
             if game.check_move_amount(cp_row, cp_col, tp_row, tp_col) is False:
-                print("Try again.")
                 return False
 
             if game.check_move_direction(cp_row, cp_col, tp_row, tp_col) is False:
-                print("Try again")
                 return False
 
             if game.check_obstructions(cp_row, cp_col, tp_row, tp_col) is False:
-                print("Try again")
                 return False
 
             if game.check_rings(cp_row, cp_col, tp_row, tp_col) is False:
-                print("Try again.")
                 return False
 
             game.move_piece(cp_row, cp_col, tp_row, tp_col, self._board)
@@ -677,9 +668,8 @@ class GessGame:
             # Next player's turn
             game.next_player_turn()
 
-def main():
+if __name__ == '__main__':
 
     game = GessGame()
     game.print_Board()
 
-if __name__ == '__main__': main()
