@@ -525,7 +525,7 @@ class GessGame:
 
         white_rings = 0
 
-        game.move_piece(cp_row, cp_col, tp_row, tp_col, temp_board)
+        GessGame.move_piece(self, cp_row, cp_col, tp_row, tp_col, temp_board)
 
         """print("Temp Board")
         for x in range(len(temp_board)):
@@ -646,24 +646,25 @@ class GessGame:
             tp_col = int(GessGame.convert_column(self, target_position[0])) - 1
             tp_row = int(GessGame.convert_row(self, target_position[1:])) - 1
 
-            if GessGame.check_current_piece(cp_row, cp_col) is False:
+            if GessGame.check_current_piece(self, cp_row, cp_col) is False:
                 return False
 
-            if GessGame.check_move_amount(cp_row, cp_col, tp_row, tp_col) is False:
+            if GessGame.check_move_amount(self, cp_row, cp_col, tp_row, tp_col) is False:
                 return False
 
-            if GessGame.check_move_direction(cp_row, cp_col, tp_row, tp_col) is False:
+            if GessGame.check_move_direction(self, cp_row, cp_col, tp_row, tp_col) is False:
                 return False
 
-            if GessGame.check_obstructions(cp_row, cp_col, tp_row, tp_col) is False:
+            if GessGame.check_obstructions(self, cp_row, cp_col, tp_row, tp_col) is False:
                 return False
 
-            if GessGame.check_rings(cp_row, cp_col, tp_row, tp_col) is False:
+            if GessGame.check_rings(self, cp_row, cp_col, tp_row, tp_col) is False:
                 return False
 
-            GessGame.move_piece(cp_row, cp_col, tp_row, tp_col, self._board)
+            GessGame.move_piece(self, cp_row, cp_col, tp_row, tp_col, self._board)
 
-            GessGame.check_winner()
+            GessGame.check_winner(self)
 
             # Next player's turn
-            GessGame.next_player_turn()
+            GessGame.next_player_turn(self)
+
