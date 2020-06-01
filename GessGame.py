@@ -668,8 +668,6 @@ class GessGame:
             # Next player's turn
             game.next_player_turn()
 
-if __name__ == '__main__':
-
-    game = GessGame()
-    game.print_Board()
+game = GessGame()
+game.print_Board()
 
