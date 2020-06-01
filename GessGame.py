@@ -370,6 +370,8 @@ class GessGame:
 
                 return False
 
+        return True
+
     def check_obstructions(self, cp_row, cp_col, tp_row, tp_col):
         """
         Check if attempted move stops when an obstruction is encountered.
@@ -430,7 +432,7 @@ class GessGame:
 
             print("The game continues!")
 
-            return
+            return True
 
     def check_move_direction(self, cp_row, cp_col, tp_row, tp_col):
         """
@@ -505,6 +507,8 @@ class GessGame:
             print("Invalid move: cannot move southwest without a stone located southwest in 3x3 piece.")
 
             return False
+
+        return True
 
     def check_rings(self, cp_row, cp_col, tp_row, tp_col):
         """
