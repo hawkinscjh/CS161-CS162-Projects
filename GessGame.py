@@ -720,13 +720,3 @@ class GessGame:
             return True
 
         return True
-
-game = GessGame()
-game.print_Board()
-print(game.get_player_turn())
-game.make_move('f3', 'e2')
-game.print_Board()
-print(game.get_player_turn())
-game.make_move('h18', 'h17')
-game.print_Board()
-print(game.get_player_turn())
