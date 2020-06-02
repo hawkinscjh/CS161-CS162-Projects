@@ -385,6 +385,35 @@ class GessGame:
         # Don't need to worry about boundaries; already taken care of in other functions
         # Ex) Moving East (right): as soon as [y + 1] column encounters another stone, must stop at first overlap.
 
+        row_moves = tp_row - cp_row
+
+        col_moves = tp_col - cp_col
+
+        # Moving South
+        if tp_row > cp_row and tp_col == cp_col:
+            print("Moving South")
+
+        elif tp_row < cp_row and tp_col == cp_col:
+            print("Moving North")
+
+        elif tp_row == cp_row and tp_col < cp_col:
+            print("Moving West")
+
+        elif tp_row == cp_row and tp_col > cp_col:
+            print("Moving East")
+
+        elif tp_row < cp_row and tp_col < cp_col:
+            print("Moving North West")
+
+        elif tp_row < cp_row and tp_col > cp_col:
+            print("Moving North East")
+
+        elif tp_row > cp_row and tp_col < cp_col:
+            print("Moving South West")
+
+        elif tp_row > cp_row and tp_col > cp_col:
+            print("Moving South East")
+
         pass
 
     def check_winner(self):
@@ -455,6 +484,10 @@ class GessGame:
         south_east = self._board[cp_row + 1][cp_col + 1]
         south_west = self._board[cp_row + 1][cp_col - 1]
 
+        row_moves = abs(tp_row - cp_row)
+
+        col_moves = abs(tp_col - cp_col)
+
         # Check if center moves out of bounds
         for x in range(0, 21):
 
@@ -463,6 +496,12 @@ class GessGame:
                 print("Invalid move: center cannot move out of bounds.")
 
                 return False
+
+        if row_moves != col_moves and row_moves != 0 and col_moves != 0:
+
+            print("If moving diagonally, row and column advances must be the same number.")
+
+            return False
 
         # Check movement north
         if (tp_col == cp_col) and (tp_row < cp_row) and north == '-':
@@ -681,3 +720,13 @@ class GessGame:
             return True
 
         return True
+
+game = GessGame()
+game.print_Board()
+print(game.get_player_turn())
+game.make_move('f3', 'e2')
+game.print_Board()
+print(game.get_player_turn())
+game.make_move('h18', 'h17')
+game.print_Board()
+print(game.get_player_turn())
