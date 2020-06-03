@@ -16,8 +16,8 @@ class GessGame:
 
     def __init__(self):
         """
-        Game initializes in UNFINISHED state, begins on Player X's turn, and creates labelled 20x20 game board with all
-        43 of each player's pieces in place
+        Game initializes in UNFINISHED state, begins on BLACK's turn, and creates labelled 22x22 game area with all
+        43 of each player's pieces in place on the 18x18 board.
         """
 
         # Game starts in UNFINISHED state
@@ -55,7 +55,7 @@ class GessGame:
         self._board[18][20] = '2'
         self._board[19][20] = '1'
 
-        # Place all 43 of Player O's pieces
+        # Place all 43 of WHITE's pieces
         self._board[1][2] = 'w'
         self._board[1][4] = 'w'
         self._board[1][6] = 'w'
@@ -79,6 +79,7 @@ class GessGame:
         self._board[2][12] = 'w'
         self._board[2][14] = 'w'
         self._board[2][16] = 'w'
+        self._board[2][17] = 'w'
         self._board[2][18] = 'w'
         self._board[3][2] = 'w'
         self._board[3][4] = 'w'
@@ -99,7 +100,7 @@ class GessGame:
         self._board[6][14] = 'w'
         self._board[6][17] = 'w'
 
-        # Place all 43 of Player X's pieces
+        # Place all 43 of BLACK's pieces
         self._board[18][17] = 'b'
         self._board[18][15] = 'b'
         self._board[18][13] = 'b'
@@ -154,21 +155,21 @@ class GessGame:
 
     def get_game_state(self):
         """
-        Returns current state of the game. Can be UNFINISHED, X_WON, or O_WON.
+        Returns current state of the game. Can be UNFINISHED, BLACK_WON, or WHITE_WON.
         """
 
         return self._game_state
 
     def get_player_turn(self):
         """
-        Get method for player's turn
+        Get method for player's turn.
         """
 
         return self._game_turn
 
     def next_player_turn(self):
         """
-        Changes the turn to the next player
+        Changes the turn to the next player.
         """
 
         if self._game_turn == 'BLACK':
@@ -190,7 +191,7 @@ class GessGame:
 
     def convert_column(self, column):
         """
-        Converts a column from a letter to its corresponding number. Utilized in make_move function.
+        Converts a column from a letter to its corresponding number.
         """
 
         if column.lower() == 'a':
@@ -238,7 +239,7 @@ class GessGame:
 
     def convert_row(self, row):
         """
-        Converts a row's labelled row position to its actual position on the board. Utilized in make_move function.
+        Converts a row's labelled row position to its actual position on the board.
         """
 
         row = int(row)
@@ -286,39 +287,10 @@ class GessGame:
 
         return row
 
-    def check_move_amount(self, cp_row, cp_col, tp_row, tp_col):
-        """
-        Calculates amount being moved.
-        Pieces must move; they cannot be "moved" to their current location.
-        If center stone is present, piece can move until it encounters another piece or goes over 18x18 board bounds.
-        If center stone is not present, piece can move up to 3 spaces, unless it encounters another piece or goes over
-        18x18 board bounds.
-        """
-
-        row_moves = abs(tp_row - cp_row)
-
-        col_moves = abs(tp_col - cp_col)
-
-        print("Row moves, Col moves:", row_moves, ",", col_moves)
-
-        if cp_row == tp_row and cp_col == tp_col:
-            print("Invalid move: center must move.")
-
-            return False
-
-        if self._board[cp_row][cp_col] == '-':
-
-            if row_moves > 3 or col_moves > 3:
-                print("Invalid move: center is empty, so max movement is only 3 spaces.")
-
-                return False
-
-        return True
-
     def check_current_piece(self, cp_row, cp_col):
         """
-        Make the 3x3 piece that is going to be moved. Check if 3x3 is legal.
-        Start piece cannot include any enemy pieces in its 3x3 grid.
+        Check if selected 3x3 is legal.
+        Current piece cannot include any opponent's stones in its 3x3 grid.
         """
 
         center = self._board[cp_row][cp_col]
@@ -368,62 +340,42 @@ class GessGame:
 
         return True
 
-    def check_winner(self):
+    def check_move_amount(self, cp_row, cp_col, tp_row, tp_col):
         """
-        Functions checks, after making a legal move, if opposing player has any rings: if not, current players wins.
+        Calculates amount being moved.
+        Pieces must move; they cannot be "moved" to their current location.
+        If center stone is present, piece can move until it encounters another piece or goes over 18x18 board bounds.
+        If center stone is not present, piece can move up to 3 spaces, unless it encounters another piece or goes over
+        18x18 board bounds.
         """
 
-        black_rings = 0
+        # Calculate row_moves
+        row_moves = abs(tp_row - cp_row)
 
-        white_rings = 0
+        # Calculates col_moves
+        col_moves = abs(tp_col - cp_col)
 
-        for x in range(2, 18):
+        # If [cp_row][cp_col] doesn't move, return False
+        if cp_row == tp_row and cp_col == tp_col:
+            print("Invalid move: center must move.")
 
-            for y in range(2, 18):
+            return False
 
-                if self._board[x][y] == '-' and \
-                        self._board[x + 1][y - 1] == self._board[x + 1][y] == self._board[x + 1][y + 1] == \
-                        self._board[x][y - 1] == self._board[x][y + 1] == \
-                        self._board[x - 1][y - 1] == self._board[x - 1][y] == self._board[x - 1][y + 1] == 'b':
-                    black_rings += 1
+        # If the center is empty, can only move a max of 3 spaces
+        if self._board[cp_row][cp_col] == '-':
 
-        for x in range(2, 18):
+            if row_moves > 3 or col_moves > 3:
+                print("Invalid move: center is empty, so max movement is only 3 spaces.")
 
-            for y in range(2, 18):
+                return False
 
-                if self._board[x][y] == '-' and \
-                        self._board[x + 1][y - 1] == self._board[x + 1][y] == self._board[x + 1][y + 1] == \
-                        self._board[x][y - 1] == self._board[x][y + 1] == \
-                        self._board[x - 1][y - 1] == self._board[x - 1][y] == self._board[x - 1][y + 1] == 'w':
-                    white_rings += 1
-
-        if self._game_turn == 'BLACK' and white_rings == 0:
-
-            print("Black wins!")
-
-            self._game_state = 'BLACK_WON'
-
-            return
-
-        elif self._game_turn == 'WHITE' and black_rings == 0:
-
-            print("White wins!")
-
-            self._game_state = 'WHITE_WON'
-
-            return
-
-        else:
-
-            print("The game continues!")
-
-            return True
+        return True
 
     def check_move_direction(self, cp_row, cp_col, tp_row, tp_col):
         """
         Check if center moves out of bounds.
-        Check if the attempted direction of movement is allowed.
-        Pieces can only be moved in a direction if a stone is located in that location in the perimeter of 3x3 piece.
+        Check if the attempted direction of movement is allowed: pieces can only be moved in a direction if a stone is
+        located in that direction in the perimeter of 3x3 piece.
         """
 
         center = self._board[cp_row][cp_col]
@@ -437,7 +389,6 @@ class GessGame:
         south_west = self._board[cp_row + 1][cp_col - 1]
 
         row_moves = abs(tp_row - cp_row)
-
         col_moves = abs(tp_col - cp_col)
 
         # Check if center moves out of bounds
@@ -505,27 +456,191 @@ class GessGame:
 
         return True
 
-    def check_rings(self, cp_row, cp_col, tp_row, tp_col):
+    def check_obstructions(self, cp_row, cp_col, tp_row, tp_col):
         """
-        Players are not allowed to make a move that leaves themselves without a ring.
-        Functions checks if player's move leaves themselves without a ring.
-        Utilized in move_piece function.
+        Check if attempted move stops when an obstruction is encountered.
+        Obstructions include any of the current player's stones, the opponent's stones, or the boundaries of the
+        18x18 board.
+        Obstructions can be overlapped by 3x3 piece, but must stop there, and cannot overlap more than one row or column
+        of the 3x3 piece.
         """
 
-        # Could make temp board, move pieces, then check if no rings are left on current player's side
-        # If so, then return False
+        row_moves = int(tp_row - cp_row)
 
+        col_moves = int(tp_col - cp_col)
+
+        # Create a temporary board mirroring the actual board
         temp_board = []
 
         for i in self._board:
             temp_board.append(list(i))
 
-        black_rings = 0
+        # Check movement South
+        # Check the area being moved to: if there is a stone in the way of movement, and overlap occurs over more than
+        # one row or column of the piece being moved, return False
+        if tp_row > cp_row and tp_col == cp_col:
 
+            for x in range(0, abs(row_moves)):
+
+                for y in range(-1, 2):
+
+                    if temp_board[cp_row + 2 + x][cp_col + y] == 'b' or temp_board[cp_row + 2 + x][cp_col + y] == 'w':
+
+                        temp_board[cp_row + 2 + x][cp_col + y] = 'X'
+
+                    if temp_board[cp_row + 1 + x][cp_col + y] == 'X':
+                        print("Invalid move: there's an obstruction in the way of movement.")
+
+                        return False
+
+        # Check movement North
+        # Check the area being moved to: if there is a stone in the way of movement, and overlap occurs over more than
+        # one row or column of the piece being moved, return False
+        elif tp_row < cp_row and tp_col == cp_col:
+
+            for x in range(0, abs(row_moves)):
+
+                for y in range(-1, 2):
+
+                    if temp_board[cp_row - 2 - x][cp_col + y] == 'b' or temp_board[cp_row - 2 - x][cp_col + y] == 'w':
+                        temp_board[cp_row - 2 - x][cp_col + y] = 'X'
+
+                    if temp_board[cp_row - 1 - x][cp_col + y] == 'X':
+                        print("Invalid move: there's an obstruction in the way of movement.")
+
+                        return False
+
+        # Check movement West
+        # Check the area being moved to: if there is a stone in the way of movement, and overlap occurs over more than
+        # one row or column of the piece being moved, return False
+        elif tp_row == cp_row and tp_col < cp_col:
+
+            for x in range(0, abs(col_moves)):
+
+                for y in range(-1, 2):
+
+                    if temp_board[cp_row + y][cp_col - 2 - x] == 'b' or temp_board[cp_row + y][cp_col - 2 - x] == 'w':
+                        temp_board[cp_row + y][cp_col - 2 - x] = 'X'
+
+                    if temp_board[cp_row + y][cp_col - 1 - x] == 'X':
+                        print("Invalid move: there's an obstruction in the way of movement.")
+
+                        return False
+
+        # Check movement East
+        # Check the area being moved to: if there is a stone in the way of movement, and overlap occurs over more than
+        # one row or column of the piece being moved, return False
+        elif tp_row == cp_row and tp_col > cp_col:
+
+            for x in range(0, abs(col_moves)):
+
+                for y in range(-1, 2):
+
+                    if temp_board[cp_row + y][cp_col + 2 + x] == 'b' or temp_board[cp_row + y][cp_col + 2 + x] == 'w':
+                        temp_board[cp_row + y][cp_col + 2 + x] = 'X'
+
+                    if temp_board[cp_row + y][cp_col + 2 + x] == 'X':
+                        print("Invalid move: there's an obstruction in the way of movement.")
+
+                        return False
+
+        # Check movement Northwest
+        # Check the area being moved to: if there is a stone in the way of movement, and overlap occurs over more than
+        # one row or column of the piece being moved, return False
+        elif tp_row < cp_row and tp_col < cp_col:
+
+            for x in range(0, abs(col_moves)):
+
+                for y in range(0, 3):
+
+                    if temp_board[cp_row - 2 - x][cp_col - 2 - x] == 'b' or temp_board[cp_row - 2 - x][
+                        cp_col - 2 - x] == 'w' or temp_board[cp_row - y][cp_col - 2 - x] == 'b' or temp_board[cp_row - y][
+                        cp_col - 2 - x] == 'w':
+                        temp_board[cp_row - 2 - x][cp_col - 2 - x] = 'X'
+
+                    if temp_board[cp_row - 1 - x][cp_col - 1 - x] == 'X':
+                        print("Invalid move: there's an obstruction in the way of movement.")
+
+                        return False
+
+        # Check movement Northeast
+        # Check the area being moved to: if there is a stone in the way of movement, and overlap occurs over more than
+        # one row or column of the piece being moved, return False
+        elif tp_row < cp_row and tp_col > cp_col:
+
+            for x in range(0, abs(col_moves)):
+
+                for y in range(0, 3):
+
+                    if temp_board[cp_row - 2 - x][cp_col + 2 + x] == 'b' or temp_board[cp_row - 2 - x][
+                        cp_col + 2 + x] == 'w' or temp_board[cp_row - y][cp_col + 2 + x] == 'b' or temp_board[cp_row - y][
+                        cp_col + 2 + x] == 'w':
+                        temp_board[cp_row - 2 - x][cp_col + 2 + x] = 'X'
+
+                    if temp_board[cp_row - 1 - x][cp_col + 1 + x] == 'X':
+                        print("Invalid move: there's an obstruction in the way of movement.")
+
+                        return False
+
+        # Check movement Southwest
+        # Check the area being moved to: if there is a stone in the way of movement, and overlap occurs over more than
+        # one row or column of the piece being moved, return False
+        elif tp_row > cp_row and tp_col < cp_col:
+
+            for x in range(0, abs(col_moves)):
+
+                for y in range(0, 3):
+
+                    if temp_board[cp_row + 2 + x][cp_col - 2 - x] == 'b' or temp_board[cp_row + 2 + x][
+                        cp_col - 2 - x] == 'w' or temp_board[cp_row + y][cp_col - 2 - x] == 'b' or temp_board[cp_row + y][
+                        cp_col - 2 - x] == 'w':
+                        temp_board[cp_row + 2 + x][cp_col - 2 - x] = 'X'
+
+                    if temp_board[cp_row + 1 + x][cp_col - 1 - x] == 'X':
+                        print("Invalid move: there's an obstruction in the way of movement.")
+
+                        return False
+
+        # Check movement Southeast
+        # Check the area being moved to: if there is a stone in the way of movement, and overlap occurs over more than
+        # one row or column of the piece being moved, return False
+        elif tp_row > cp_row and tp_col > cp_col:
+
+            for x in range(0, abs(col_moves)):
+
+                for y in range(0, 3):
+
+                    if temp_board[cp_row + 2 + x][cp_col + 2 + x] == 'b' or temp_board[cp_row + 2 + x][
+                        cp_col + 2 + x] == 'w' or temp_board[cp_row + y][cp_col + 2 + x] == 'b' or temp_board[cp_row + y][
+                        cp_col + 2 + x] == 'w':
+                        temp_board[cp_row + 2 + x][cp_col + 2 + x] = 'X'
+
+                    if temp_board[cp_row + 1 + x][cp_col + 1 + x] == 'X':
+                        print("Invalid move: there's an obstruction in the way of movement.")
+
+                        return False
+
+    def check_rings(self, cp_row, cp_col, tp_row, tp_col):
+        """
+        Check if a player's move leaves themselves without a ring: players are not allowed to make a move that
+        leaves themselves without a ring.
+        """
+
+        # Create a temporary board, mirroring the current board
+        temp_board = []
+
+        for i in self._board:
+            temp_board.append(list(i))
+
+        # Start each player at 0 rings
+        black_rings = 0
         white_rings = 0
 
+        # Make the move using the temp_board instead of the actual board
         GessGame.move_piece(self, cp_row, cp_col, tp_row, tp_col, temp_board)
 
+        # If there exists a 3x3 grid on the game board that consists of 8 stones belonging to BLACK,
+        # surrounding an empty center, then increase ring count by 1.
         if self._game_turn == 'BLACK':
 
             for x in range(2, 18):
@@ -538,6 +653,8 @@ class GessGame:
                             temp_board[x - 1][y - 1] == temp_board[x - 1][y] == temp_board[x - 1][y + 1] == 'b':
                         black_rings += 1
 
+        # If there exists a 3x3 grid on the game board that consists of 8 stones belonging to WHITE,
+        # surrounding an empty center, then increase ring count by 1.
         if self._game_turn == 'WHITE':
 
             for x in range(2, 18):
@@ -550,12 +667,14 @@ class GessGame:
                             temp_board[x - 1][y - 1] == temp_board[x - 1][y] == temp_board[x - 1][y + 1] == 'w':
                         white_rings += 1
 
+        # If it's BLACK's turn and their move left themselves without a ring, return False
         if self._game_turn == 'BLACK' and black_rings == 0:
 
             print("Invalid move: players cannot make a move that leaves themselves without a ring.")
 
             return False
 
+        # If it's WHITE's turn and their move left themselves without a ring, return False
         elif self._game_turn == 'WHITE' and white_rings == 0:
 
             print("Invalid move: players cannot make a move that leaves themselves without a ring.")
@@ -613,141 +732,73 @@ class GessGame:
 
             board[x][19] = '-'
 
-    def check_obstructions(self, cp_row, cp_col, tp_row, tp_col):
+    def check_winner(self):
         """
-        Check if attempted move stops when an obstruction is encountered.
-        Obstructions include any of the current player's stones, the opponent's stones, or the boundaries of the
-        18x18 board.
-        Obstructions can be overlapped by 3x3 piece, but must stop there, and cannot overlap more than one row or column
-        of the 3x3 piece.
+        Function called after all check functions.
+        Checks, after making a move, if opposing player has any rings: if not, current players wins.
         """
 
-        # Scan area between [cp_row][cp_col] and [tp_row][tp_col] for stones
-        # Don't need to worry about boundaries; already taken care of in other functions
-        # Ex) Moving East (right): as soon as [y + 1] column encounters another stone, must stop at first overlap.
+        # Each player begins with 0 rings
+        black_rings = 0
+        white_rings = 0
 
-        row_moves = int(tp_row - cp_row)
+        # If there exists a 3x3 grid on the game board that consists of 8 stones belonging to BLACK,
+        # surrounding an empty center, then increase ring count by 1.
+        for x in range(2, 18):
 
-        col_moves = int(tp_col - cp_col)
+            for y in range(2, 18):
 
-        temp_board = []
+                if self._board[x][y] == '-' and \
+                        self._board[x + 1][y - 1] == self._board[x + 1][y] == self._board[x + 1][y + 1] == \
+                        self._board[x][y - 1] == self._board[x][y + 1] == \
+                        self._board[x - 1][y - 1] == self._board[x - 1][y] == self._board[x - 1][y + 1] == 'b':
+                    black_rings += 1
 
-        for i in self._board:
-            temp_board.append(list(i))
+        # If there exists a 3x3 grid on the game board that consists of 8 stones belonging to WHITE,
+        # surrounding an empty center, then increase ring count by 1.
+        for x in range(2, 18):
 
-        if tp_row > cp_row and tp_col == cp_col:
+            for y in range(2, 18):
 
-            for x in range(0, abs(row_moves)):
+                if self._board[x][y] == '-' and \
+                        self._board[x + 1][y - 1] == self._board[x + 1][y] == self._board[x + 1][y + 1] == \
+                        self._board[x][y - 1] == self._board[x][y + 1] == \
+                        self._board[x - 1][y - 1] == self._board[x - 1][y] == self._board[x - 1][y + 1] == 'w':
+                    white_rings += 1
 
-                if temp_board[cp_row + 2 + x][cp_col] == 'b' or temp_board[cp_row + 2 + x][cp_col] == 'w':
-                    temp_board[cp_row + 2 + x][cp_col] = 'X'
+        # If it's the end of BLACK's turn and WHITE has no rings, BLACK wins.
+        if self._game_turn == 'BLACK' and white_rings == 0:
 
-                if temp_board[cp_row + 1 + x][cp_col] == 'X':
-                    print("Invalid move: there's an obstruction in the way of movement.")
+            print("Black wins!")
 
-                    return False
+            self._game_state = 'BLACK_WON'
 
-        elif tp_row < cp_row and tp_col == cp_col:
+            return
 
-            for x in range(0, abs(row_moves)):
+        # If it's the end of WHITE's turn and BLACK has no rings, BLACK wins.
+        elif self._game_turn == 'WHITE' and black_rings == 0:
 
-                if temp_board[cp_row - 2 - x][cp_col] == 'b' or temp_board[cp_row - 2 - x][cp_col] == 'w':
-                    temp_board[cp_row - 2 - x][cp_col] = 'X'
+            print("White wins!")
 
-                if temp_board[cp_row - 1 - x][cp_col] == 'X':
-                    print("Invalid move: there's an obstruction in the way of movement.")
+            self._game_state = 'WHITE_WON'
 
-                    return False
+            return
 
-        elif tp_row == cp_row and tp_col < cp_col:
+        else:
 
-            for x in range(0, abs(col_moves)):
-
-                if temp_board[cp_row][cp_col - 2 - x] == 'b' or temp_board[cp_row][cp_col - 2 - x] == 'w':
-                    temp_board[cp_row][cp_col - 2 - x] = 'X'
-
-                if temp_board[cp_row][cp_col - 1 - x] == 'X':
-                    print("Invalid move: there's an obstruction in the way of movement.")
-
-                    return False
-
-        elif tp_row == cp_row and tp_col > cp_col:
-
-            for x in range(0, abs(col_moves)):
-
-                if temp_board[cp_row][cp_col + 2 + x] == 'b' or temp_board[cp_row][cp_col + 2 + x] == 'w':
-                    temp_board[cp_row][cp_col + 2 + x] = 'X'
-
-                if temp_board[cp_row][cp_col + 2 + x] == 'X':
-                    print("Invalid move: there's an obstruction in the way of movement.")
-
-                    return False
-
-        elif tp_row < cp_row and tp_col < cp_col:
-
-            for x in range(0, abs(col_moves)):
-
-                if temp_board[cp_row - 2 - x][cp_col - 2 - x] == 'b' or temp_board[cp_row - 2 - x][
-                    cp_col - 2 - x] == 'w':
-                    temp_board[cp_row - 2 - x][cp_col - 2 - x] = 'X'
-
-                if temp_board[cp_row - 1 - x][cp_col - 1 - x] == 'X':
-                    print("Invalid move: there's an obstruction in the way of movement.")
-
-                    return False
-
-        elif tp_row < cp_row and tp_col > cp_col:
-
-            for x in range(0, abs(col_moves)):
-
-                if temp_board[cp_row - 2 - x][cp_col + 2 + x] == 'b' or temp_board[cp_row - 2 - x][
-                    cp_col + 2 + x] == 'w':
-                    temp_board[cp_row - 2 - x][cp_col + 2 + x] = 'X'
-
-                if temp_board[cp_row - 1 - x][cp_col + 1 + x] == 'X':
-                    print("Invalid move: there's an obstruction in the way of movement.")
-
-                    return False
-
-        elif tp_row > cp_row and tp_col < cp_col:
-
-            for x in range(0, abs(col_moves)):
-
-                if temp_board[cp_row + 2 + x][cp_col - 2 - x] == 'b' or temp_board[cp_row + 2 + x][
-                    cp_col - 2 - x] == 'w':
-                    temp_board[cp_row + 2 + x][cp_col - 2 - x] = 'X'
-
-                if temp_board[cp_row + 1 + x][cp_col - 1 - x] == 'X':
-                    print("Invalid move: there's an obstruction in the way of movement.")
-
-                    return False
-
-        elif tp_row > cp_row and tp_col > cp_col:
-
-            for x in range(0, abs(col_moves)):
-
-                if temp_board[cp_row + 2 + x][cp_col + 2 + x] == 'b' or temp_board[cp_row + 2 + x][
-                    cp_col + 2 + x] == 'w':
-                    temp_board[cp_row + 2 + x][cp_col + 2 + x] = 'X'
-
-                if temp_board[cp_row + 1 + x][cp_col + 1 + x] == 'X':
-                    print("Invalid move: there's an obstruction in the way of movement.")
-
-                    return False
+            return True
 
     def make_move(self, current_position, target_position):
         """
-        A 'piece' is selected by the center of its 3x3 grid. current_position and target_position are passed off to
-        their respective functions to create their 3x3 pieces and checked if they are legal.
-        Next, function checks if the piece's move is legal. Pieces cannot move in directions without a stone located in
-        that direction in the perimeter of the 3x3 piece. Pieces without stones in their center cannot move more than
-        3 spaces in a direction. Pieces with or without stones in their center cannot move once they have encountered
-        another stone in their area of movement.
-        Function removes stones that are overlapped by the piece and removes stones that are left outside of the 18x18
-        board.
-        Function then calls ring_check to check that either side still has at least one ring structure, updating the
-        game_state if necessary.
-        Finally, if all moves and pieces made are valid, function calls update_player_turn()
+        A 'piece' is selected by the center of its 3x3 grid. current_position and target_position define the 3x3 area
+        being selected and being moved to, respectively. Row and column values are calculated from the user's input,
+        these values create the centers of the current and target pieces.
+        Next, check functions are called to check that the piece selected is a valid piece to move, if the movement
+        amount is allowed, if the direction of movement is allowed, if there are any obstructions in the way of
+        movement, and if moving the selected piece breaks the player's own rings, which is not allowed.
+        Finally, if all of these functions do not return False, the piece gets moved on the board, any stones captured
+        or left out of bounds are removed, and the check_winner function is called to check whether the move resulted
+        in a player's winning the game. If no winners, then the player's turn is updated to the next player.
         """
 
         if self._game_state == 'UNFINISHED':
@@ -762,8 +813,6 @@ class GessGame:
 
             if GessGame.check_current_piece(self, cp_row, cp_col) is False:
                 return False
-
-            print(GessGame.check_current_piece(self, cp_row, cp_col))
 
             if GessGame.check_move_amount(self, cp_row, cp_col, tp_row, tp_col) is False:
                 return False
@@ -787,3 +836,4 @@ class GessGame:
             return True
 
         return True
+
