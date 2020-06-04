@@ -1,17 +1,19 @@
 # Name: Casey Hawkins
-# Date: 05/27/2020
-# Description: Gess, an abstract board game pitting two players, Player X and Player O, against each other in a
-# combination of Go and Chess. Players' start on an 18x18 board, each with 43 stones. Players take turns moving
-# a 3x3 'piece', utilizing rules listed in the make_move function, in an attempt to remove all ring pieces from their
-# opponent. Rules for ring pieces are in the ring_check function. First player to lose all ring pieces loses
+# Date: 06/03/2020
+# Description: Gess, an abstract board game combining Go and Chess. Black and White each have 43 stones on their
+# respective halves of an 18x18 board. Each player takes turns moving a 3x3 "piece", consisting of at least one of their
+# stones and none of their opponent's stones, utilizing rules laid out in the GessGame class' check functions, with a
+# goal to remove any and all of their opponent's rings, a 3x3 piece consisting of 8 stones surrounding an empty center.
+# First to remove their opponent's rings wins.
 
 
 class GessGame:
     """
-    Class for Gess, an abstract board game pitting two players, Player X and Player O, against each other in a
-    combination of Go and Chess. Players' start on an 18x18 board, each with 43 stones. Players take turns moving
-    a 3x3 'piece', utilizing rules listed in the make_move function, in an attempt to remove all ring pieces from their
-    opponent. Rules for ring pieces are in the ring_check function. First player to lose all ring pieces loses.
+    Gess, an abstract board game combining Go and Chess. Black and White each have 43 stones on their
+    respective halves of an 18x18 board. Each player takes turns moving a 3x3 "piece", consisting of at least one of
+    their stones and none of their opponent's stones, utilizing rules laid out in the GessGame class' check functions,
+    with a goal to remove any and all of their opponent's rings, a 3x3 piece consisting of 8 stones surrounding an empty
+    center. First to remove their opponent's rings wins.
     """
 
     def __init__(self):
@@ -485,7 +487,6 @@ class GessGame:
                 for y in range(-1, 2):
 
                     if temp_board[cp_row + 2 + x][cp_col + y] == 'b' or temp_board[cp_row + 2 + x][cp_col + y] == 'w':
-
                         temp_board[cp_row + 2 + x][cp_col + y] = 'X'
 
                     if temp_board[cp_row + 1 + x][cp_col + y] == 'X':
@@ -554,8 +555,9 @@ class GessGame:
                 for y in range(0, 3):
 
                     if temp_board[cp_row - 2 - x][cp_col - 2 - x] == 'b' or temp_board[cp_row - 2 - x][
-                        cp_col - 2 - x] == 'w' or temp_board[cp_row - y][cp_col - 2 - x] == 'b' or temp_board[cp_row - y][
-                        cp_col - 2 - x] == 'w':
+                        cp_col - 2 - x] == 'w' or temp_board[cp_row - y][cp_col - 2 - x] == 'b' or \
+                            temp_board[cp_row - y][
+                                cp_col - 2 - x] == 'w':
                         temp_board[cp_row - 2 - x][cp_col - 2 - x] = 'X'
 
                     if temp_board[cp_row - 1 - x][cp_col - 1 - x] == 'X':
@@ -573,8 +575,9 @@ class GessGame:
                 for y in range(0, 3):
 
                     if temp_board[cp_row - 2 - x][cp_col + 2 + x] == 'b' or temp_board[cp_row - 2 - x][
-                        cp_col + 2 + x] == 'w' or temp_board[cp_row - y][cp_col + 2 + x] == 'b' or temp_board[cp_row - y][
-                        cp_col + 2 + x] == 'w':
+                        cp_col + 2 + x] == 'w' or temp_board[cp_row - y][cp_col + 2 + x] == 'b' or \
+                            temp_board[cp_row - y][
+                                cp_col + 2 + x] == 'w':
                         temp_board[cp_row - 2 - x][cp_col + 2 + x] = 'X'
 
                     if temp_board[cp_row - 1 - x][cp_col + 1 + x] == 'X':
@@ -592,8 +595,9 @@ class GessGame:
                 for y in range(0, 3):
 
                     if temp_board[cp_row + 2 + x][cp_col - 2 - x] == 'b' or temp_board[cp_row + 2 + x][
-                        cp_col - 2 - x] == 'w' or temp_board[cp_row + y][cp_col - 2 - x] == 'b' or temp_board[cp_row + y][
-                        cp_col - 2 - x] == 'w':
+                        cp_col - 2 - x] == 'w' or temp_board[cp_row + y][cp_col - 2 - x] == 'b' or \
+                            temp_board[cp_row + y][
+                                cp_col - 2 - x] == 'w':
                         temp_board[cp_row + 2 + x][cp_col - 2 - x] = 'X'
 
                     if temp_board[cp_row + 1 + x][cp_col - 1 - x] == 'X':
@@ -611,8 +615,9 @@ class GessGame:
                 for y in range(0, 3):
 
                     if temp_board[cp_row + 2 + x][cp_col + 2 + x] == 'b' or temp_board[cp_row + 2 + x][
-                        cp_col + 2 + x] == 'w' or temp_board[cp_row + y][cp_col + 2 + x] == 'b' or temp_board[cp_row + y][
-                        cp_col + 2 + x] == 'w':
+                        cp_col + 2 + x] == 'w' or temp_board[cp_row + y][cp_col + 2 + x] == 'b' or \
+                            temp_board[cp_row + y][
+                                cp_col + 2 + x] == 'w':
                         temp_board[cp_row + 2 + x][cp_col + 2 + x] = 'X'
 
                     if temp_board[cp_row + 1 + x][cp_col + 1 + x] == 'X':
@@ -836,4 +841,3 @@ class GessGame:
             return True
 
         return True
-
