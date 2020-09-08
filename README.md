@@ -1,29 +1,29 @@
-# portfolio-project
+# project-10
 
-**Remember that this project cannot be submitted late.**
+Write a class named FBoard for playing a game, where player x is trying to get her piece to corner square (7,7) and player o is trying to make it so player x doesn't have any legal moves.  It should have the following private data members:
 
-Write a class named GessGame for playing an abstract board game called Gess. You can see the rules [here](https://www.chessvariants.com/crossover.dir/gess.html).  Note that when a piece's move causes it to overlap stones, any stones covered by the **footprint** get removed, not just those covered by one of the piece's stones.  It is not legal to make a move that leaves you without a ring.  It's possible for a player to have more than one ring.  A player doesn't lose until they have no remaining rings.
+* An 8x8 list of lists for tracking what's on each square of the board.
+* A data member for tracking the game state, that holds one of the following string values: "X_WON", "O_WON", or "UNFINISHED".
+* Data members to keep track of where the x piece is.
 
-Locations on the board will be specified using columns labeled a-t and rows labeled 1-20, with row 1 being the Black side and row 20 the White side.  The actual board is only columns b-s and rows 2-19.  The center of the piece being moved must stay within those boundaries.  An edge of the piece may go into columns a or t, or rows 1 or 20, but any pieces there are removed at the end of the move.  Black goes first.
+**The data members should all be private.**
+* An init method (constructor) that initializes the list of lists to represent an empty 8x8 board (you can use whatever character you want to represent empty).  It should put four o pieces at the following (row, column) coordinates: (5,7), (6,6), (7,5), and (7,7).  It should put an x piece at (0,0).  It should also initialize the other data members.
+* A method called get_game_state, that returns the current value of game_state.
+* A method called move_x that takes as parameters the row and column of the square to move to.  If the desired move is not allowed, or if the game has already been won, it should just return False.  Otherwise it should make the move and return True.  A piece belonging to x can move 1 square diagonally in any direction.  A piece is not allowed to move off the board or to an occupied square.  If x's move gets her piece to square (7,7), game_state should be set to "X_WON".
+* A method called move_o that takes as parameters the row and column to move from, and the row and column to move to.  If the first pair of coordinates doesn't hold o's piece, or if the desired move is not allowed, or if the game has already been won, it should just return False.  Othewise it should make the move and return True.  A piece belonging to o can move 1 square diagonally, **but the row and column cannot both increase**, so any o piece has at most three available moves.  For example, if player o has a piece at (5, 1), it could move to (4, 0), (4, 2), or (6,0), but not to (6, 2).  It is not allowed to move off the board or to an occupied square.  If o's move leaves no legal move for x, game_state should be set to "O_WON".
 
-There's an online implementation [here](https://gess.h3mm3.com/) you can try, but it's not 100% consistent with the rules. In the case of any discrepancy between the online game and the rules, you should comply with the rules (you can also ask us for clarification of course).  One example is that the online game lets you make moves that leave you without a ring, which isn't allowed (if a player wants to end the game, they can just resign).  Another example is that the online game lets you choose a piece whose center is off the board (in columns a or t, or in rows 1 or 20), which isn't allowed.
+You do not need to track whose turn it is.  Either move method can be called multiple times in a row.
 
-You're not required to print the board, but you will probably find it very useful for testing purposes.
+It doesn't matter which index of the list of lists you consider the row and which you consider the column as long as you're consistent.
 
-Your GessGame class must include the following:
-* An init method that initializes any data members.
-* A method called get_game_state that takes no parameters and returns 'UNFINISHED', 'BLACK_WON' or 'WHITE_WON'.
-* A method called resign_game that lets the current player concede the game, giving the other player the win.
-* A method called make_move that takes two parameters - strings that represent the center square of the piece being moved and the desired new location of the center square.  For example, make_move('b6', 'e9').  If the indicated move is not legal for the current player, or if the game has already been won, then it should just return False.  Otherwise it should make the indicated move, remove any captured stones, update the game state if necessary, update whose turn it is, and return True.
-
-Feel free to add whatever other classes, methods, or data members you want.  All data members must be **private**.
+Feel free to add helper functions if you want.  You may also find it useful to add a print function to help with debugging.
 
 Here's a very simple example of how the class could be used:
 ```
-game = GessGame()
-move_result = game.make_move('m3', 'm6')
-game.make_move('e14', 'g14')
-state = game.get_game_state()
-game.resign_game()
+   fb = FBoard();
+   fb.move_x(1,1);
+   fb.move_x(2,0);
+   fb.move_o(6,6,5,5);
+   print(fb.get_game_state());
 ```
-The file must be named: **GessGame.py**
+The file must be named: **FBoard.py**
